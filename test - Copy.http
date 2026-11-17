@@ -1,0 +1,71 @@
+### 1. Login and capture token into a variable
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+> {%
+    // Automatically saves the "token" field from the JSON response
+    client.global.set("auth_token", response.body.token);
+%}
+
+### Direct bypass
+GET http://localhost:8081/api/products/1001
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##1 api/products/1001
+GET http://localhost:8080/api/products/1001
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##2 api/products
+GET http://localhost:8080/api/products
+Authorization: Bearer {{auth_token}}
+
+
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+### 2. Test protected API using the saved variable ##3 api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}
+
+### 2. Test protected API using the saved variable ##3xxx api/orders/101
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer {{auth_token}}

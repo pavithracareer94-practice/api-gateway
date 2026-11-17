@@ -1,0 +1,25 @@
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+=======================================
+
+GET http://localhost:8080/api/products/5
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc5NDYwNDAxNCwiZXhwIjoxNzk0NjA3NjE0fQ.T9S9y_PAmquaVp5L4Ynf29BblUTV3inzYWvPQuusnf-afuGMdzH9_BwtDk2LDHv3
+
+=============================================
+
+GET http://localhost:8080/api/products
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc5NDYwNDAxNCwiZXhwIjoxNzk0NjA3NjE0fQ.T9S9y_PAmquaVp5L4Ynf29BblUTV3inzYWvPQuusnf-afuGMdzH9_BwtDk2LDHv3
+
+======================================================
+
+GET http://localhost:8080/api/orders/101
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc5NDYwNDAxNCwiZXhwIjoxNzk0NjA3NjE0fQ.T9S9y_PAmquaVp5L4Ynf29BblUTV3inzYWvPQuusnf-afuGMdzH9_BwtDk2LDHv3
+
+========================================================
+
+

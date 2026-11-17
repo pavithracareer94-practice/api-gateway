@@ -1,0 +1,17 @@
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+### Test CORS Preflight from React (localhost:3000)
+OPTIONS http://localhost:8080/api/orders/101
+Origin: http://localhost:3000
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: Authorization
+
+### Direct bypass
+GET http://localhost:8081/api/products/1001
+

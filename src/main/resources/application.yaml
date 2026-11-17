@@ -1,0 +1,109 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: order-service
+              uri: lb://ORDER-SERVICE-S
+              predicates:
+                - Path=/api/orders/**
+              filters:
+                - AddRequestHeader=X-Gateway-Source, SpringCloudGateway
+                - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+                - name: CircuitBreaker
+                  args:
+                    id: orderServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/orders
+
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/api/products/**
+              filters:
+                - AddRequestHeader=X-Gateway-Source, SpringCloudGateway
+                - name: CircuitBreaker
+                  args:
+                    id: productServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/products
+
+# --- OpenAPI / Swagger Docs Proxy Routes ---
+            - id: order-service-docs
+              uri: lb://ORDER-SERVICE-S
+              predicates:
+                - Path=/v3/api-docs/order-service
+              filters:
+                - RewritePath=/v3/api-docs/order-service, /v3/api-docs
+            - id: product-service-docs
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/v3/api-docs/product-service
+              filters:
+                - RewritePath=/v3/api-docs/product-service, /v3/api-docs
+            - id: api-gateway-docs
+              uri: lb://API-GATEWAY
+              predicates:
+                - Path=/v3/api-docs/api-gateway
+              filters:
+                - RewritePath=/v3/api-docs/api-gateway, /v3/api-docs
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Order Service
+        url: /v3/api-docs/order-service
+      - name: Product Service
+        url: /v3/api-docs/product-service
+      - name: Api Gateway
+        url: /v3/api-docs/api-gateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orderServiceCircuitBreaker:
+        slidingWindowSize: 6             # Evaluate the last 10 requests
+        minimumNumberOfCalls: 3       # Need at least 5 calls before calculating failure rate
+        failureRateThreshold: 50           # Trip (OPEN) circuit if >= 50% of requests fail
+        waitDurationInOpenState: 10s       # Stay OPEN for 10s before testing recovery (HALF_OPEN)
+        permittedNumberOfCallsInHalfOpenState: 3
+      productServiceCircuitBreaker:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+  timelimiter:
+    instances:
+      orderServiceCircuitBreaker:
+        timeoutDuration: 3s                # Fail fast if order-service takes longer than 3 seconds
+      productServiceCircuitBreaker:
+        timeoutDuration: 3s
+
+#management:
+ # tracing:
+  #  sampling:
+   #   probability: 1.0  # Traces 100% of requests locally (use 0.1 in high-traffic production)
+ # otlp:
+  #  tracing:
+   #   endpoint: http://localhost:4318/v1/traces
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  file:
+    name: D:/PAVITHRA_CAREER/PRJT/logs/${spring.application.name}.log
+  structured:
+    format:
+      file: ecs
+      console: ecs
